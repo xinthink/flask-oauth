@@ -170,6 +170,7 @@ class OAuthRemoteApp(object):
     :param access_token_method: the HTTP method that should be used
                                 for the access_token_url.  Defaults
                                 to ``'GET'``.
+    :param http_opts: HTTP client options. check httplib2 doc for details.
     """
 
     def __init__(self, oauth, name, base_url,
@@ -178,7 +179,8 @@ class OAuthRemoteApp(object):
                  consumer_key, consumer_secret,
                  request_token_params=None,
                  access_token_params=None,
-                 access_token_method='GET'):
+                 access_token_method='GET',
+                 http_opts=None):
         self.oauth = oauth
         #: the `base_url` all URLs are joined with.
         self.base_url = base_url
@@ -194,7 +196,7 @@ class OAuthRemoteApp(object):
         self.access_token_method = access_token_method
         self._consumer = oauth2.Consumer(self.consumer_key,
                                          self.consumer_secret)
-        self._client = OAuthClient(self._consumer)
+        self._client = OAuthClient(self._consumer, None, **http_opts)
 
     def status_okay(self, resp):
         """Given request data, checks if the status is okay."""
